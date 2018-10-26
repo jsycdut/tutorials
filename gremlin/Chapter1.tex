@@ -32,8 +32,8 @@ Kelvin R.Lawrence\\
 当前撰稿时间：2018年9月4日\\
 \end{flushleft}
 \subsection{提供反馈}
-\indent 如果本书有任何的错误或者你有任何想说的，都可以联系我。要是有建议性的提升内容的话那就更棒了。一个提交反馈的好办法是在\href{https://github.com/krlawrence/graph}{Github}上创建一个issue，本书是第281批预览版。\\
-\indent 在此感谢所有创建issue，提交pull request，和花费时间校验本书手稿的人！
+\indent 如果本书有任何的错误或者你有任何想法，都可以联系我。要是有建议性的提升内容的话那就更棒了。一个提交反馈的好办法是在\href{https://github.com/krlawrence/graph}{Github}上创建一个issue，本书是第281批预览版。\\
+\indent 在此感谢所有创建issue，提交pull request，和花费时间校验本书手稿的人。
 
 \subsection{致谢词}
 \indent 在此，感谢我的同事，Graham Wallis，Jason Plurad和AdamHolley，他们改善和提升了本书中一些查询示例的效率。Gremlin毫无疑问是需要团队协作的，我们共同花费了很多时间用于讨论和处理最优的查询方式。\\
@@ -41,4 +41,7 @@ Kelvin R.Lawrence\\
 \indent 最后，感谢所有通过e-mail，github-issue, github-pull-request提交反馈的所有人，是你们促使本书不断进化，正如技术本身不断进化一样，非常感谢你们。
 
 \subsection{本书主要内容}
+\indent 本书通过以真实的“图数据”为例，介绍了Apache TinkerPop 3 Gremlin 图查询和遍历语言。数据以及其他相关的文件可以从GitHub上下载到。本书用到的图为“air-routes”，该图是一个包含3373个机场在内的43400条飞行路线的抽象模型。该示例能在Gremlin console中通过TinkerGraph加载air-routes.graphml文件来完整运行。如何设置相关的环境在“下载，安装以及启动console控制台”一节详细介绍。该示例已更新且已在Apache TinkerPop 3.3.3版本完成测试。\\
+
+\indent TinkerGraph是一个存在于内存中的图，也就是说相关数据不会持久化到磁盘中。该图属于Apache TinkerPop 3的一部分。本书的意义在于让那些毫无相关技术储备的读者能够上手和快速使用Gremlin console以及ari-routes图。在本书的后续部分，我会介绍使用其他的技术比如JanusGraph，Apache Cassandra，Gremlin Server，以及Elasticsearch来构建可伸缩的和持久化的图存储，并且这些存储仍然可以使用Gremlin查询语言。除了使用Gremlin console外，我还会介绍如何写TinkerPop相关的单独的Java和Groovy程序，当然这里面还混入了几个Ruby程序示例。
 \end{document}
