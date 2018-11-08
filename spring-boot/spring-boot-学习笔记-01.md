@@ -36,6 +36,12 @@ spring-boot使用maven构建，比起spring-mvc的常规的套路而言，配置
   作用条件：存在properties文件且该变量也存在于其中
 
 * @Bean
+  作用对象：方法
+  作用效果：该方法应该返回一个对象，返回的对象将作为Spring的bean处理
+
+* @ServletComponentScan
+  作用对象：类，接口（含注解）， 枚举
+  作用效果：开启扫描内嵌web server的servlet组件，包含@WebFilter @WebListener @WebServlet
 
 ## 最简单的HelloWorld项目
 * 确保pom文件中有以下依赖
