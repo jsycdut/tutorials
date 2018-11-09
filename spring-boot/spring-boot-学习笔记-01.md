@@ -7,7 +7,7 @@ spring-boot使用maven构建，比起spring-mvc的常规的套路而言，配置
 
 ## 基本项目构建
 
-使用IDEA构建，新建项目选择"Spring Initializr"（当然随着日子的变迁以后IDEA可能没有这个选项，但是如果官网还活着的话，可以去https://start.spring.io， 按照提示来操作）然后选择maven构建，填写相关内容即可。
+使用IDEA构建，新建项目选择"Spring Initializr"（当然随着日子的变迁以后IDEA可能没有这个选项，但是如果官网还活着的话，可以去 [spring io](https://start.spring.io)， 按照提示来操作）然后选择maven构建，填写相关内容即可。
 
 ## 常用注解
 无论是Spring还是Spring boot，注解都是核心成员，它们扮演了很重要的角色
@@ -15,39 +15,51 @@ spring-boot使用maven构建，比起spring-mvc的常规的套路而言，配置
 * @Controller
 
    作用对象：类
+
    作用效果：声明此类为Controller
 
 * @RequestMapping
 
   作用对象：类，方法
+
   作用效果：被作用对象将负责对应URL的解析
 
 * @WebFilter
 
   作用对象：类
+
   作用效果：被作用对象将在实现javax.servlet.Filter接口后成为一个过滤器（需重写对应方法）
+
   作用条件：Spring boot启动类添加@ServletComponentScan注解
 
 * @WebListener
 
   作用对象：类
+
   作用效果：被作用对象在实现javax.servlet.ServletRequestListener接口后成为一个监听器（需重写对应方法）
+  
   作用条件：同WebFilter注解
 
 * @Value("${variable_name_defined_in_properties_file}")
 
   作用对象：类字段，方法，方法参数，以及注解类型
+
   作用效果：被注解者将获取{}内对应变量在被Spring boot管理起来的properties文件中的值
+
   作用条件：存在properties文件且该变量也存在于其中
+
 
 * @Bean
 
   作用对象：方法
+
   作用效果：该方法应该返回一个对象，返回的对象将作为Spring的bean处理
+  
 
 * @ServletComponentScan
 
   作用对象：类，接口（含注解）， 枚举
+
   作用效果：开启扫描内嵌web server的servlet组件，包含@WebFilter @WebListener @WebServlet
 
 ## 最简单的HelloWorld项目
@@ -100,5 +112,10 @@ server.servlet.context-path=demo
 ## 自定义配置文件
 
 ## 自定义日志
+
+## 统一异常处理
+Spring boot出现异常是，统一调到/error请求，根据请求类型的content-type不同返回不同的结果。
+
+
 
 
