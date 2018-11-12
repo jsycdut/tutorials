@@ -31,7 +31,7 @@ maven的配置文件有两处，安装目录下的conf子目录中的settings.xm
 2. clean   清理
 3. site    网站生成
 
-![maven in my idea spring boot project](https://github.com/jsycdut/tutorials/blob/master/maven/media/idea-maven.png)
+![maven in my idea spring boot project](https://raw.githubusercontent.com/jsycdut/tutorials/master/maven/media/idea-maven.png)
 
 在Intellij IDEA中，以我的spring-boot项目maven projects窗口可以看见，这里有三个主要的条目，lifecycle，plugins，dependencies。其中列出了常用的生命周期，其实只有clean和site是真正的生命周期，其余的全是default生命周期的构建阶段，因为clean和site这俩声明周期的构建阶段都比较少而且简单，所以就只列了其中与生命周期同名的构建阶段出来，而default的生命周期又太多，所以也只列出了常用的几个。
 
