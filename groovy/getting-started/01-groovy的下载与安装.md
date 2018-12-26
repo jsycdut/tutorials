@@ -20,3 +20,13 @@
 ### 验证
 官方的每一个groovy发行版都提供了一个OpenPGP签名文件（扩展名为".asc"的文件)，以及该发行版的校验和，建议用户生成自己的校验和并且和官方提供的校验和作比对，同时，使用[这个groovy发行版专用OpenPGP Key文件](https://www.apache.org/dist/groovy/KEYS)来检查签名，以此确定您下载的是官方的未经篡改的groovy发行版。
 
+* [如何验证从Apache下载的软件包](https://www.apache.org/info/verification.html#how-to-verify)
+
+*接下来将介绍groovy的几个版本*，具体的下载页面请点击[这里](http://www.groovy-lang.org/download.html)
+
+### groovy 3.0
+groovy 3.0是最新的groovy版本，针对jdk8+，默认开启了Parrot解析器，目前可以下载到3.0的提前稳定版本。
+
+### groovy 2.6
+groovy 2.6为jdk7+设计，支持新的Parrot解析器（当此功能被开启的时候），但是此版本已经“退役”，
+
