@@ -50,37 +50,95 @@ groovy 2.4是groovy在2.5之前的另一个稳定版本。在2.4.4之前的groov
 下载Apache groovy的zip发布包来安装并不难（需要配个环境变量），但如果你不想折腾的话，考虑下面的包管理器安装。
 
 * [SDKMAN](http://sdkman.io/)
+
 适用Unix相关系统（OS X以及Linux诸多发行版），SDKMAN用于管理多个平行的软件开发包，比如jdk，groovy，Scala等等等等等，详细信息请参考官方网站。
 ```
 sdk install groovy
 ```
 
 * [Homebrew](http://brew.sh/)
+
 所谓的macOS缺失的包管理器
 ```
 brew install groovy
 ```
 
 * [MacPorts](http://www.macports.org/)
+
 MacPorts是macOS下的系统管理工具
 ```
 sudo port install groovy
 ```
 
 * [Scoop](http://scoop.sh/)
+
 Windows的命令行安装程序，据说是受homebrew启发的
 ```
  scoop install groovy
 ```
 
 * [Chocolatey](https://chocolatey.org/)
+
 Chocolatey，也是Windows上的，提供一个健全的方法管理软件
 ```
 choco install groovy
 ```
-Linux/*nix用户：你可能更喜欢使用你自己的包管理器来安装groovy，比如apt，dkpg，pacman等等（等等，要是包管理器上的groovy版本跟不上你以为我会用？ Ubuntu:你是在黑我没有groovy 2.5？）
+`Linux/*nix`用户：你可能更喜欢使用你自己的包管理器来安装groovy，比如apt，dkpg，pacman等等（等等，要是包管理器上的groovy版本跟不上你以为我会用？ Ubuntu:你是在黑我没有groovy 2.5？）
 
 Windows用户：你们还是乖乖的用exe的groovy安装器吧。(来自一个Windows黑子的窃笑(๑>◡<๑) )
 
 
 ## 从构建工具获取groovy
+如果你希望在你的项目中使用groovy作为项目依赖的话，你可以在项目构建的依赖条目里声明如下
+
+*如果只需要groovy的核心模块以及打为jar包的Antlr，ASM以及内部的CLI实现的相关类的拷贝*
+```
+# groovy
+org.codehaus.groovy:groovy:x.y.z
+
+# mvaen
+<groupId>org.codehaus.groovy</groupId>
+  <artifactId>groovy</artifactId>
+<version>x.y.z</version>
+```
+
+*如果需要可选的groovy相关模块*
+```
+如果需要groovy-sql模块，将下面的$moudule换为sql即可
+# groovy
+org.codehaus.groovy:groovy-$module:x.y.z
+
+# mvaen
+<groupId>org.codehaus.groovy</groupId>
+  <artifactId>groovy-$module</artifactId>
+<version>x.y.z</version>
+```
+
+*groovy全模块*
+```
+# 如果需要groovy以及相关的模块（可选模块除外），可以使用groovy-all
+# gradle
+org.codehaus.groovy:groovy-all:x.y.z
+
+# mvaen
+<groupId>org.codehaus.groovy</groupId>
+  <artifactId>groovy-all</artifactId>
+  <version>x.y.z</version>
+<type>pom</type> <!-- required JUST since Groovy 2.5.0 -->
+```
+这里实在是说的有点不明白，我在官网也没看太明白，那里的注释令人觉得匪夷所思，所以暂时先放一放，后期再看再改。
+
+groovy的发布版jar包可以从[maven中央仓库](http://repo1.maven.org/maven2/org/codehaus/groovy/)，或者[JCenter](http://jcenter.bintray.com/org/codehaus/groovy/)获取
+
+groovy的snapshot的jar可以从[JFrog OpenSource Snapshots repository](https://oss.jfrog.org/oss-snapshot-local/org/codehaus/groovy)获取，这并非官方发布的版本，但是被提供用于心得官方版本的继承测试。
+
+## 系统需求
+indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，主要用于动态语言，暂时还看不懂（手动无奈！！！）
+|Groovy|JVM需求(non-indy)|JVM需求(indy)|
+|3.0-目前版本|1.8+|1.8+|
+|2.5-2.6|1.7+|1.7+|
+|2.3-2.4|1.6+|1.7+|
+|2.0-2.2|1.5+|1.7+|
+|1.6-1.8|1.5+|N/A|
+|1.5|1.4+|N/A|
+|1.0|1.4-1.7|N/A|
