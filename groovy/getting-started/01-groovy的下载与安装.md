@@ -146,3 +146,8 @@ indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，�
 |1.0|1.4-1.7|N/A|
 
 如果想使用动态调用，也就是indy，参考[这里](http://www.groovy-lang.org/indy.html)
+
+## 安装groovy
+其实前面介绍了很多的方式，比如sdk，homebrew，以及maven，gradle以及二进制包等方式，这里的内容其实显得有点累赘，整理一下放在下面。
+
+
