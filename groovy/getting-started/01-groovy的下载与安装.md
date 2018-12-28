@@ -130,10 +130,11 @@ org.codehaus.groovy:groovy-all:x.y.z
 
 groovy的发布版jar包可以从[maven中央仓库](http://repo1.maven.org/maven2/org/codehaus/groovy/)，或者[JCenter](http://jcenter.bintray.com/org/codehaus/groovy/)获取
 
-groovy的snapshot的jar可以从[JFrog OpenSource Snapshots repository](https://oss.jfrog.org/oss-snapshot-local/org/codehaus/groovy)获取，这并非官方发布的版本，但是被提供用于心得官方版本的继承测试。
+groovy的snapshot的jar可以从[JFrog OpenSource Snapshots repository](https://oss.jfrog.org/oss-snapshot-local/org/codehaus/groovy)获取，这并非官方发布的版本，但是被提供用于新的官方版本的继承测试。
 
 ## 系统需求
 indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，主要用于动态语言，暂时还看不懂（手动无奈！！！）
+
 |Groovy|JVM需求(non-indy)|JVM需求(indy)|
 |3.0-目前版本|1.8+|1.8+|
 |2.5-2.6|1.7+|1.7+|
