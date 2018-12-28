@@ -144,3 +144,5 @@ indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，�
 |1.6-1.8|1.5+|N/A|
 |1.5|1.4+|N/A|
 |1.0|1.4-1.7|N/A|
+
+如果想使用动态调用，也就是indy，参考[这里](http://www.groovy-lang.org/indy.html)
