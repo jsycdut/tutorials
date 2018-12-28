@@ -41,7 +41,7 @@ groovy 2.4是groovy在2.5之前的另一个稳定版本。在2.4.4之前的groov
 * [Apache发布镜像](http://www.apache.org/dyn/closer.cgi/groovy/)
 * [Apache打包仓库](https://archive.apache.org/dist/groovy/)
 * [Bintray's Groovy仓库](http://bintray.com/groovy/)
- 
+
 *调用动态支持*
 如果需要在groovy启用indy支持并且你使用jdk7+的话，请参考[调用动态支持相关信息](http://www.groovy-lang.org/indy.html)
 
@@ -135,7 +135,8 @@ groovy的snapshot的jar可以从[JFrog OpenSource Snapshots repository](https://
 ## 系统需求
 indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，主要用于动态语言，暂时还看不懂（手动无奈！！！）
 
-|Groovy|JVM需求(non-indy)|JVM需求(indy)|
+| Groovy | JVM需求(non-indy) | JVM需求(indy) |
+| :----: | :----------------:| :-----------: |
 |3.0-目前版本|1.8+|1.8+|
 |2.5-2.6|1.7+|1.7+|
 |2.3-2.4|1.6+|1.7+|
