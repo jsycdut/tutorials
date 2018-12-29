@@ -153,11 +153,12 @@ indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，�
 
 ### 稳定版
 你可以下载二进制版本的groovy发行版，也可以下载相关的文档
-[groovy 2.5 二进制发行版](https://bintray.com/artifact/download/groovy/maven/apache-groovy-binary-2.5.5.zip) | [源码发行版](https://bintray.com/artifact/download/groovy/maven/apache-groovy-src-2.5.5.zip)
 
-[文档](https://bintray.com/artifact/download/groovy/maven/apache-groovy-docs-2.5.5.zip)
-
-[2进制发行版 + 源码 + 文档](https://bintray.com/artifact/download/groovy/maven/apache-groovy-sdk-2.5.5.zip)
+ * [groovy 2.5 二进制发行版](https://bintray.com/artifact/download/groovy/maven/apache-groovy-binary-2.5.5.zip) | [源码发行版](https://bintray.com/artifact/download/groovy/maven/apache-groovy-src-2.5.5.zip)
+ 
+ * [文档](https://bintray.com/artifact/download/groovy/maven/apache-groovy-docs-2.5.5.zip)
+ 
+ * [2进制发行版 + 源码 + 文档](https://bintray.com/artifact/download/groovy/maven/apache-groovy-sdk-2.5.5.zip)
 
 如果想获取更多的关于groovy 2.5的资料，参考[发布版说明](http://groovy-lang.org/releasenotes/groovy-2.5.html)或者[变更日志](http://groovy-lang.org/changelogs/changelog-2.5.5.html)
 
@@ -169,12 +170,13 @@ indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，�
 
 ### 前提条件
 
-groovy 2.5需要jdk6+，目前来说在使用java9的snapshots版本的时候，在切面（aspect）方面有些问题，如果需要使用groovy-nio，需要jdk7+，使用groovy invokedynamic使用jdk7+，但是jdk8最适合。
+groovy 2.5需要jdk6+，目前来说在使用java9的snapshots版本的时候，在切面（aspect）方面有些问题，如果需要使用groovy-nio，需要jdk7+，使用groovy invokedynamic也是需要jdk7+，但用jdk8+更好。
 
-groovy的持续集成服务器也是一个去查找每个groovy最适合的java版本的地方，那里拥有丰富的测试资源。
+groovy的持续集成服务器也是一个去查找groovy与java版本适配关系的号地方，那里拥有丰富的测试资源。
+
 
 ### SDKMAN!(The Software Development Kit Manager)
-在bash平台，安装groovy可以使用SDK Manager，(Mac OS X, Linux, Cygwin, Solaris, FreeBSD)，
+在bash平台，安装groovy可以使用SDK Manager(Mac OS X, Linux, Cygwin, Solaris, FreeBSD)，
 ```
 # 按照以下代码操作
 curl -s get.sdkman.io | bash
@@ -219,12 +221,15 @@ Windows用户可以使用[NSIS Windows安装器](http://docs.groovy-lang.org/lat
 4. 设置JAVA_HOME指明jdk所在
 
 这一波操作过后，在你的命令行输入如下命令，可以打开交互式的groovyshell
+
 ```groovysh```
 
 你要是喜欢[图形化的交互界面](http://www.groovy-lang.org/install.html#..\..\../subprojects/groovy-console/src/spec/doc/groovy-console.adoc)，可以
+
 ```groovyConsole```
 
 如果执行groovy脚本，命令行里面敲
-```groovy youGroovyScript```
+
+```groovy path/to/your-groovy-script```
 
 第一章完结撒花  (๑>◡<๑) (2018-12-29:09:38:18)
