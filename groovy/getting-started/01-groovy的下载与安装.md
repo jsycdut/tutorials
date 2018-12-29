@@ -103,6 +103,8 @@ org.codehaus.groovy:groovy:x.y.z
 ```
 
 *如果需要可选的groovy相关模块*
+
+可选的groovy模块包括 "ant", "bsf", "console", "docgenerator", "groovydoc", "groovysh", "jmx", "json", "jsr223", "servlet", "sql", "swing", "test", "testng" and "xml". 
 ```
 如果需要groovy-sql模块，将下面的$moudule换为sql即可
 # groovy
@@ -122,11 +124,9 @@ org.codehaus.groovy:groovy-all:x.y.z
 
 # mvaen
 <groupId>org.codehaus.groovy</groupId>
-  <artifactId>groovy-all</artifactId>
-  <version>x.y.z</version>
-<type>pom</type> <!-- required JUST since Groovy 2.5.0 -->
+<artifactId>groovy-all</artifactId>
+<version>x.y.z</version>
 ```
-这里实在是说的有点不明白，我在官网也没看太明白，那里的注释令人觉得匪夷所思，所以暂时先放一放，后期再看再改。
 
 groovy的发布版jar包可以从[maven中央仓库](http://repo1.maven.org/maven2/org/codehaus/groovy/)，或者[JCenter](http://jcenter.bintray.com/org/codehaus/groovy/)获取
 
@@ -148,6 +148,83 @@ indy意为InvokeDynamic，这是一条jdk7才引入的新的虚拟机指令，�
 如果想使用动态调用，也就是indy，参考[这里](http://www.groovy-lang.org/indy.html)
 
 ## 安装groovy
-其实前面介绍了很多的方式，比如sdk，homebrew，以及maven，gradle以及二进制包等方式，这里的内容其实显得有点累赘，整理一下放在下面。
+其实前面介绍了很多的关于下载和安装的方式，比如sdk，homebrew，以及maven，gradle以及二进制包等方式，这里的内容其实显得有点累赘，整理一下放在下面。
 
 
+### 稳定版
+你可以下载二进制版本的groovy发行版，也可以下载相关的文档
+[groovy 2.5 二进制发行版](https://bintray.com/artifact/download/groovy/maven/apache-groovy-binary-2.5.5.zip) | [源码发行版](https://bintray.com/artifact/download/groovy/maven/apache-groovy-src-2.5.5.zip)
+
+[文档](https://bintray.com/artifact/download/groovy/maven/apache-groovy-docs-2.5.5.zip)
+
+[2进制发行版 + 源码 + 文档](https://bintray.com/artifact/download/groovy/maven/apache-groovy-sdk-2.5.5.zip)
+
+如果想获取更多的关于groovy 2.5的资料，参考[发布版说明](http://groovy-lang.org/releasenotes/groovy-2.5.html)或者[变更日志](http://groovy-lang.org/changelogs/changelog-2.5.5.html)
+
+[invokedynamic参考](http://docs.groovy-lang.org/latest/html/documentation/invokedynamic-support.html)
+
+### snapshot版
+
+如果你是一个具有冒险精神的家伙，可以使用snapshot版本的groovy，请参阅[这里](https://oss.jfrog.org/oss-snapshot-local/org/codehaus/groovy)
+
+### 前提条件
+
+groovy 2.5需要jdk6+，目前来说在使用java9的snapshots版本的时候，在切面（aspect）方面有些问题，如果需要使用groovy-nio，需要jdk7+，使用groovy invokedynamic使用jdk7+，但是jdk8最适合。
+
+groovy的持续集成服务器也是一个去查找每个groovy最适合的java版本的地方，那里拥有丰富的测试资源。
+
+### SDKMAN!(The Software Development Kit Manager)
+在bash平台，安装groovy可以使用SDK Manager，(Mac OS X, Linux, Cygwin, Solaris, FreeBSD)，
+```
+# 按照以下代码操作
+curl -s get.sdkman.io | bash
+
+# 如果你用的不是bash，记得在你的shell的rc文件里面写入下面一行代码
+# 是bash的话，直接执行就可以了，或者打开一个新的窗口
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+sdk install groovy
+
+groovy --version
+```
+
+### OS X 下groovy的安装
+
+* MacPorts
+```
+sudo port install groovy
+```
+
+* Homebrew
+```brew install groovy```
+
+### Windows下的安装
+Windows用户可以使用[NSIS Windows安装器](http://docs.groovy-lang.org/latest/html/documentation/TODO-Windows+NSIS-Installer)
+
+### 其他发行版
+从[这里](https://bintray.com/groovy/maven)下载groovy的其他版本
+
+### 源码
+参考[Github仓库](https://github.com/apache/groovy)
+
+### IDE插件
+从IDE插件获取Groovy参考[这里](http://docs.groovy-lang.org/latest/html/documentation/tools-ide.html)
+
+### 安装二进制版本
+这个稍显复杂，需要自己配点环境变量，操作流程如下
+
+1. 下载[二进制安装包](http://www.groovy-lang.org/install.html#download-groovy)，解压
+2. 设置GROOVY_HOME指向解压目录
+3. 将GROOVY_HOME/bin添加到PATH环境变量
+4. 设置JAVA_HOME指明jdk所在
+
+这一波操作过后，在你的命令行输入如下命令，可以打开交互式的groovyshell
+```groovysh```
+
+你要是喜欢[图形化的交互界面](http://www.groovy-lang.org/install.html#..\..\../subprojects/groovy-console/src/spec/doc/groovy-console.adoc)，可以
+```groovyConsole```
+
+如果执行groovy脚本，命令行里面敲
+```groovy youGroovyScript```
+
+第一章完结撒花  (๑>◡<๑) (2018-12-29:09:38:18)
