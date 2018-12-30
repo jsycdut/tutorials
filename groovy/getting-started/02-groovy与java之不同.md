@@ -22,7 +22,7 @@ groovy中默认引入了一些包，内容如下
 
 ## 运行时调度（多重方法）
 
-groovy中的方法调用是在运行时选择确定的，这被称为运行时调度或者多重方法。这意味着调用哪个方法将有运行时传入参数的类型决定，这在java中是不可想象的，java中在编译期就确定了运行时该调用什么方法（依据方法参数的声明类型）。
+groovy中的方法调用是在运行时选择确定的，这被称为运行时调度或者多重方法。这意味着调用哪个方法将由运行时传入参数的类型决定，这在java中是不可想象的，java中在编译期就确定了运行时该调用什么方法（依据方法参数的声明类型）。
 
 下面这段代码，符合Java规范，也能被groovy执行，但是执行结果是不同的
 ```
@@ -36,7 +36,7 @@ Object o = "Object";
 int result = method(o);
 ```
 
-在java中，输出结果是2，而在groovy中，输出为1。
+在java中，执行的返回结果是2，而在groovy中，为1。
 
 原因是，java使用静态信息类型，o被声明为Object，所以Java运行时会去调用第二个方法，但是groovy是在运行时决定调用什么方法的，由于o本质为字符串，所以groovy在运行时选择了第一个方法。
 
@@ -110,7 +110,7 @@ class A{
 new A.B()
 ```
 
-静态内部类是groovy支持的最好的一宗内部类，如果你着实需要一个内部类，那么就写成静态的吧。
+静态内部类是groovy支持的最好的一种内部类，如果你着实需要一个内部类，那么就写成静态的吧。
 
 ### 匿名内部类
 
@@ -121,11 +121,11 @@ import java.util.concurrent.TimeUnit
 CountDownLatch called = new CountDownLatch(1)
 
 Timer timer = new Timer()
-  timer.schedule(new TimeTask(){
-      void run(){
-        called.countDown()
-      }
-  }, 0)
+timer.schedule(new TimeTask(){
+    void run(){
+      called.countDown()
+    }
+}, 0)
 
 assert called.await(10, TimeUnit.SECONDS)
 ```
