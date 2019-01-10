@@ -146,7 +146,7 @@ public class Y{
 ```
 
 groovy不支持`y.new X()`这种语法，你必须写成`new X(y)`，就像下面的样子
-```
+``` groovy
 public class Y{
   public class X{}
   public X foo{
@@ -203,7 +203,7 @@ try {
 
 groovy在转换字符串到char的时候，支持两种方法（groovy风格和C风格），但是当字符串拥有多个字符的时候，这俩方法有些不同的区别。groovy风格的转换要更加宽容，会采用首个字符，然而C风格的转换会因异常而失败
 
-```
+```groovy
 // 对单个字符的字符串来说，两种风格效果相同
 assert ((char) "c").class==Character
 assert ("c" as char).class==Character
