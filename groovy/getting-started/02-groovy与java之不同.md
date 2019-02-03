@@ -25,7 +25,7 @@ groovy中默认引入了一些包，内容如下
 groovy中的方法调用是在运行时选择确定的，这被称为运行时调度或者多重方法。这意味着调用哪个方法将由运行时传入参数的类型决定，这在java中是不可想象的，java中在编译期就确定了运行时该调用什么方法（依据方法参数的声明类型）。
 
 下面这段代码，符合Java规范，也能被groovy执行，但是执行结果是不同的
-```
+```groovy
 int method(String arg) {
     return 1;
 }
@@ -43,11 +43,11 @@ int result = method(o);
 ## 数组初始化
 
 groovy中,`{}`被留给了闭包使用，所以你不能像下面一样创建数组
-```
+```java
 int[] arr = {1, 2, 3,};
 ```
 而是应该使用
-```
+```groovy
 int[] arr = [1, 2, 3]
 ```
 
@@ -57,7 +57,7 @@ int[] arr = [1, 2, 3]
 
 如果你需要一个包私有属性，应该加上`@PackageScope`注解
 
-```
+```groovy
 class Person{
   @PckageScope String name
 }
@@ -102,7 +102,7 @@ groovy的匿名内部类和嵌套类和java的规范相同，你也不用拿出j
 
 ### 静态内部类
 
-```
+```groovy
 class A{
   static class B{}
 }
@@ -114,7 +114,7 @@ new A.B()
 
 ### 匿名内部类
 
-```
+```java
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -146,7 +146,7 @@ public class Y{
 ```
 
 groovy不支持`y.new X()`这种语法，你必须写成`new X(y)`，就像下面的样子
-```
+``` groovy
 public class Y{
   public class X{}
   public X foo{
@@ -163,13 +163,13 @@ public class Y{
 
 ### lambdas
 java 8支持lambdas，以及方法引用
-```
+```java
 Runnable run = () -> System.out.println("Run");
 list.forEach(System.out::println);
 ```
 
 java 8的lambda或多或少可以认为是一个匿名内部类，groovy不支持lambda，但是却支持闭包
-```
+```groovy
 Runnable run = {println 'run'}
 list.each(println it)
 ```
@@ -182,14 +182,14 @@ list.each(println it)
 ### String以及Character常量
 
 在groovy中，单引号括起来的常量被称作String，双型号括起来的，成为String或者GString，这取决于常量是否拥有插入符号
-```
+```groovy
 assert 'c'.getClass()==String
 assert "c".getClass()==String
 assert "c${1}".getClass() in GString
 ```
 
 当参数类型是char的时候，传入String，会被转为char，当调用char类型参数的方法时，我们需要显式的转换或者确保该值已经被提前转换。
-```
+```groovy
 char a='a'
 assert Character.digit(a, 16)==10 : 'But Groovy does boxing'
 assert Character.digit((char) 'a', 16)==10
@@ -203,7 +203,7 @@ try {
 
 groovy在转换字符串到char的时候，支持两种方法（groovy风格和C风格），但是当字符串拥有多个字符的时候，这俩方法有些不同的区别。groovy风格的转换要更加宽容，会采用首个字符，然而C风格的转换会因异常而失败
 
-```
+```groovy
 // 对单个字符的字符串来说，两种风格效果相同
 assert ((char) "c").class==Character
 assert ("c" as char).class==Character
@@ -221,7 +221,7 @@ assert 'cx'.asType(char) == 'c'
 ### 基础类型以及包装器
 
 groovy用对象代表一切（java：你黑我有基础类型？你可别忘了我在jdk5里面的自动拆装箱哦小老弟！！！），groovy会自动给基础类型套上了引用类型，这和java不同，java里面，有个精度拓宽的操作，叫做widening，比如在long参数类型的方法里面送int进入，int会被拓宽为long，但是groovy没这套操作
-```
+```groovy
 int i
 m(i)
 
