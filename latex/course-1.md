@@ -14,7 +14,7 @@ LaTex，其实是TeX的子集，具体内容，参见[WikiPedia](https://en.wiki
 
 * 文档类型
 
-文档类型，就是这篇文档，是文章，还是书籍，还是报告，使用`\documentclass{}`将你的文档类型包围起来，比如`\documentclass{article}`，一般这些标记放在一片文档的开头。
+文档类型，就是这篇文档，是文章，还是书籍，还是报告，使用`\documentclass{}`将你的文档类型包围起来，比如`\documentclass{article}`，一般这些标记放在一篇文档的开头。
 
 * 作者标记
 
@@ -89,6 +89,10 @@ This is a line of subsection, and \textbf{bold 粗体}
  % 文档终结
 \end{document}
 ```
+
+上面的内容编译成pdf后看起来像下面这样，嗯，没有任何关系的内容，果然看起来贼丑。
+
+![好丑啊](https://raw.githubusercontent.com/jsycdut/photos/master/latex/latex-1.png)
 
 ## 视频资源
 
