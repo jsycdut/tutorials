@@ -1,4 +1,4 @@
-# git
+# git :sparkles:
 
 git 作为一个版本管理系统（Version Control System，aka VCS），拥有以下特点
 
@@ -102,13 +102,125 @@ git config --global core.editor emacs
 **获取git帮助**
 
 ```
-# git help <verb> 获取某个命令的帮助
 # 下面的命令是等价的
+git help <verb> 获取某个命令的帮助
 git <verb> --help
 man git-<verb>
 
 git help config # 获取config命令的帮助
 ```
+## git仓库操作
 
-****
+**获取git仓库**
 
+一般来说，获取git仓库有两种办法
+
+1. `git clone /path/to/any/git/repository` 克隆一个已有的版本库
+2. `git init`新建一个版本库
+
+`git clone`支持很多种数据传输协议，包括`http https ssh git`等协议。
+
+**git仓库文件的状态变化**
+
+任何一个git仓库里面的文件，要么是已跟踪的，要么是未跟踪的状态，未跟踪的文件不受git仓库的管理，受跟踪的则是受仓库管理的。下图阐述了git仓库里的文件状态变化周期。
+
+![git文件状态变化周期](https://git-scm.com/figures/18333fig0201-tn.png)
+
+下面不会介绍最基础的如何将文件添加到版本库，不会举例子说明，只简单的讲一下常用的git工作流。
+
+**常用的git工作流**
+
+1. git add file1 file2 ...
+2. git commit -m "a commit comment"
+3. git pull
+4. git push
+
+基本上来说就是修改了代码，形成一次提交，然后拉取远程代码，最后发布自己的提交，中间可能会遇见冲突，遇见冲突解决冲突就完事了。
+
+**查看自己当前版本库的情况**
+
+当自己写了一段时间代码，也做了几次提交，此时可以查看一下自己版本库的情况，适时的形成提交或者清理文件，保持代码库的整洁。可以使用`git status`查看自己的版本库的目前情况。
+
+```
+$ git status
+On branch xxxx # 当前处于哪个分支
+Your branch is ahead of 'origin/master' by 2 commits # 当前分支和主分支的版本差异
+
+Changes to be committed: # 已经暂存了还没有提交的文件
+...
+
+Changes not staged for commit: # 改了还没有暂存的文件
+.....
+
+
+Untracked files: # 还没有被纳入版本库进行跟踪的文件
+...
+```
+
+上面的输入实在是太过详细，可以用`git status -s 或者 git status --short`来得到精简的版本库状态信息。
+
+```
+git status -s
+ M README.md
+MM Rakefile
+A  lib/git.rb
+M  lib/simplegit.rb
+?? LICENSE.txt
+```
+
+其中符号的含义如下
+
+* ?? 未跟踪的文件
+* A  新添加的加入暂存区的文件
+* M  已经修改了的并且放入暂存区
+*  M 已经修改了，但是没有放入暂存区
+* MM 修改了，放入暂存区了，然后又被修改了还没有放入暂存区
+
+**忽略不重要的文件**
+
+这相当重要。
+
+在项目中，有些文件是附加产物，我们并不想将其纳入版本库，比如java编译后的class文件，Python编译后的pyc文件或者日志文件等等，所以需要提前规定好，如果项目出现了这些类型的文件，我们将视若无睹（不显示在Untracked files那里）
+
+项目顶层应该有一个`.gitignore`文件，用于告诉git符合里面条件的文件不要纳入版本管理。 但是，这个文件对已经纳入版本库的文件是不起作用的，比如你之前并没有设置忽略文件，然后你将某些log结尾的日志文件放入了版本库，那么，即使你在后面的忽略文件里面忽略所有的log文件，那也是无效的。所以忽略文件应该趁早建立，应该在那些文件出现之前，就建立好。
+
+`.gitignore`文件的格式规范如下
+
+* 空行或者`#`开头的内容当做注释处理
+* 可以使用标准的glob匹配
+* 匹配模式以`/`开头防止递归
+* 匹配模式以`/`结尾指定目录
+* 要否定某个规则，可以在前面加个惊叹号`!`
+
+glob指的是shell所使用的简化了的正则表达式
+
+* `*`匹配0到任意多个任意字符
+* `[abc]`匹配括号里面的单个字符
+* `?`只匹配任意1个字符
+* `[a-z]`表示a到z的任意一个字符 [0-9]表示0到9的任意一个数字，其余类似
+* `**`表示任意中间目录，`a/**/z`匹配a/z, a/b/c/z等
+
+下面看一个`.gitignore`文件样例。
+
+```
+# 忽略所有的.a文件
+*.a
+
+# 不要忽略lib.a这个文件
+!lib.a
+
+# 忽略 build目录下的所有文件
+build/
+
+# 忽略doc目录下的txt文件，不递归往下
+doc/*.txt
+
+# 忽略doc目录下的所有pdf文件，要递归往下
+doc/**/*.pdf
+```
+
+github有个`.gitignore`模板项目，可以参考，https://github.com/github/gitignore
+
+**git中文件的移除**
+
+当不想在版本库中管理某个文件的时候，可以`git rm file`来将该文件从版本库中移除，同时将文件实体移除，这种移除是硬移除，另外还有一种软移除，只将文件从版本管理中剔除，但是不删除文件，这种操作往往在添加了`.gitignore`文件之后，但是发现自己的文件没有被忽略的情况下使用，只需要`git rm --cached file`即可，这种操作会将该文件置为Untracked files状态，从版本管理中踢出，但是并不删除文件。
