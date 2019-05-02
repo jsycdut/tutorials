@@ -99,6 +99,10 @@ git config user.email "jsycdut@gmail.com"
 git config --global core.editor emacs
 ```
 
+**中文**
+
+当git版本库里面的文件名包含中文的时候，`git status`将会把文件名的中文表示为一串斜杠和数字，比如`\345\210\206\346\224\257.`，这是因为git默认会将unicode码大于0x80的看做非寻常字符来看待，会将其编码为8进制的字符，为了避免这种情况发生，应该设置git不要对齐进行编码，只需要设置`git config --global core.quotepath false`即可。
+
 **检查配置信息**
 
 使用`git config --list`来查看所有的配置
