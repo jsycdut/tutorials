@@ -34,7 +34,7 @@ git诞生于2005年，那一年商业VCS BitKeeper终止了Linux内核社区的�
 1. git版本库 Repository
 2. 工作目录 Working Directory
 3. 暂存区 Staging Area
-![git 的三个工作区域](https://git-scm.com/book/en/v2/images/areas.png)
+![git 的三个工作区域](https://raw.githubusercontent.com/jsycdut/photos/master/git/areas.png)
 
 **git版本库**
 
@@ -146,7 +146,7 @@ git help config # 获取config命令的帮助
 
 任何一个git仓库里面的文件，要么是已跟踪的，要么是未跟踪的状态，未跟踪的文件不受git仓库的管理，受跟踪的则是受仓库管理的。下图阐述了git仓库里的文件状态变化周期。
 
-![git文件状态变化周期](https://git-scm.com/figures/18333fig0201-tn.png)
+![git文件状态变化周期](https://raw.githubusercontent.com/jsycdut/photos/master/git/life-cycle.png)
 
 下面不会介绍最基础的如何将文件添加到版本库，不会举例子说明，只简单的讲一下常用的git工作流。
 
