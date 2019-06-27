@@ -427,3 +427,21 @@ $ git config --global alias.cm commit -m
 $ # 放弃f.txt的更改 co就等价于checkout --
 $ git co f.txt
 ```
+
+## 小技巧
+
+git里面有很多小技巧，比如创建一个已经过去的日期的提交，当我出差无法更新github的时候，我会在后期补上改日的提交，毕竟我不想看到我github的某一天是空白的。
+
+**创建一个其他日期的提交**
+
+1. 写入GIT_COMMITTER_DATE环境变量为其他日期，设置committer date
+2. 在提交的时候指定--date选项改写author date
+
+比如
+
+```
+export GIT_COMMITTER_DATE="2018-08-08T14:22:21"
+git commit --date="2018-08-08T14:22:21" -m "blablablah"
+```
+
+github是以提交作者的日期来判定该天的contribution的。
