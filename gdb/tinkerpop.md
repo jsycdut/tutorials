@@ -10,6 +10,9 @@
 
 ## 特殊配置
 
+* gremlin-groovy
+当出现gremlin-groovy项目下的Error:(21, 54) java: 程序包org.apache.tinkerpop.gremlin.groovy.jsr223.ast不存在这个报错信息时，需要在project视图下，将gremlin-groovy/src/main/groovy标记为源代码，在该代码目录上右键->mark directory as source root即可
+
 * gremlin-shaded
 
 gremlin-shaded是一个只有pom.xml的子模块，需要在该子模块下执行`mvn clean install`然后移除该模块，这个模块的作用是提供其他gremlin项目所需的依赖，只需要安装好依赖即可。
