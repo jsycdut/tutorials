@@ -1,5 +1,6 @@
-# Tinkerpop-图计算框架的使用
+# Tinkerpop-图计算框架研究
 
+![Tinkerpop](https://raw.githubusercontent.com/apache/tinkerpop/master/docs/static/images/tinkerpop3-splash.png)
 ## 调试环境
 
 1. Intellij IDEA
