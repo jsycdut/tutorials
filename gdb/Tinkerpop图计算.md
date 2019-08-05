@@ -1,0 +1,9 @@
+# Tinkerpop图计算概念
+
+* VertexComputeKey
+
+顶点的属性之一，用于存储GraphComputer的数据，提供一个of方法，用于构造一个VCK，为trasient的VCK在图计算结束后，返回ComputerResult之前会被清理掉。
+
+* MemoryComputeKey
+
+MCK主要维护一个BinaryOperator，用于在图计算中将多个并行的值规约为一个值，需要注意一个BinaryOperator的可广播性和可trasient性，同样提供了of方法，用于构造一个MCK
