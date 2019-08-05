@@ -48,4 +48,3 @@ gremlin> // 此时就已经连接上了启动在localhost:8182的gremlin-server�
 gremlin> // 所有这里执行的语句都会送给gremlin-server执行
 ```
 
-具体详细的代码解读，参见[这里](https://github.com/jsycdut/tinkerpop)
