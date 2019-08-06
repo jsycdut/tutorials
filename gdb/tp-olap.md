@@ -22,5 +22,13 @@
 
 MCK主要维护一个BinaryOperator，用于在图计算中将多个并行的值规约为一个值，需要注意一个BinaryOperator的可广播性和可trasient性，同样提供了of方法，用于构造一个MCK
 
+### OLAP的主要流程是怎样的
+
+1. 调用gremlin语句，执行到graph的submit方法
+2. 顶点按照工作线程的数量分堆
+3. 在每个工作线程里面轮询每一个顶点，在其上执行vertexprogram的execute方法
+4. vp执行完毕，开始执行mr
+5. 结束，返回结果
+
 ### 参考
 * [官方文档-olap实现](http://tinkerpop.apache.org/docs/3.4.2/dev/provider/#olap-implementations)
