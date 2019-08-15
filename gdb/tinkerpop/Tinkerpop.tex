@@ -12,8 +12,13 @@
 gdm是基于Tinkerpop图计算框架开发的一款数据库产品，关于Tinkerpop，其官方网站对它自己的定位是：开源的图计算框架。其作用是通过以提供API以及相关工具的方式，简化开发者创建图应用（个人觉得包括图数据库及其处理器和其他相关应用）的难度。Tinkerpop是一个位于不同的图数据库和图处理器上的抽象层，可以视作实现一个图数据库的公约，只要将Tinkerpop这个抽象层具体化，就可以开发出自定义的图应用。
 
 Tinkerpop框架从大的方向来说，包含OLTP和OLAP两块，分别代表着在线事务处理和在线分析处理，如果要基于Tinkerpop实现一个图数据库，那么OLTP这一块是必不可少的，而OLAP是可选的。对一个数据库来说，CRUD必须实现，而这一块正是属于OLTP的范畴，所以OLTP必须实现。OLAP则提供了除OLTP之外的其他功能，比如基于某种算法对整个数据库里面的数据进行分析得出某些想要结论，这对一个图数据库来说不是必须提供的功能，属于可选部分。Tinkerpop自身的架构（图1）对外提供了OLTP和OLAP的接口（Provider API），交由图数据库的开发者去具体实现，当然Tinkerpop官方也提供了一个对这些API的实现-TinkerGraph。
+\begin{figure*}
+    \centering
+        \includegraphics[width=0.6\textwidth]{/Users/fox/tinkerpop-framework.png}
+        \caption{Tinkerpop框架组成}
+\end{figure*}
 
-目前基于Tinkerpop实现的图产品（图数据库）包括以下列表中几个比较典型的图数据库，而且在DB-engines这个全球图数据库产品排名上，下方列表中的很多产品也是名列前茅（图2），可以看出，Tinkerpop在图数据库界极受欢迎，同时表现也很优秀。
+目前基于Tinkerpop实现的图产品（图数据库）包括以下列表中几个比较典型的图数据库，而且在DB-engines这个全球图数据库产品排名上，下方列表中的很多产品也是名列前茅。
 
 \begin{itemize}
 
@@ -26,14 +31,9 @@ Tinkerpop框架从大的方向来说，包含OLTP和OLAP两块，分别代表着
 \item Alibaba GDB
 \end{itemize}
 
-\includegraphics[width=\textwidth]{/Users/fox/rank.png}
-
-
-\includegraphics[scale=1.5]{/Users/fox/tinkerpop-framework.png}
-
 \section{Tinkerpop OLAP}
 
-Tinkerpop的OLAP部分主要用于全图分析（即相关计算必须涉及到图里面的全体成员），使用了批量同步并行计算模型（Bulk Synchronous Parallel，BSP），同时规定了一系列和BSP模型中相对应的编程接口，这一部分内容将在下面阐述。
+Tinkerpop的OLAP部分主要用于全图分析（即相关计算必须涉及到图里面所有顶点），使用了批量同步并行计算模型（Bulk Synchronous Parallel，BSP），同时规定了一系列和BSP模型中相对应的编程接口，这一部分内容将在下面阐述。
 
 \subsection{BSP 与 Tinkerpop OLAP}
 批量同步并行计算模型（Bulk Synchronous Parallel，BSP），由哈佛大学的Leslie Valiant在20世纪80年代提出，是一个用于设计并行算法的桥接模型。一个BSP模型包括以下三个要点
@@ -44,7 +44,7 @@ Tinkerpop的OLAP部分主要用于全图分析（即相关计算必须涉及到�
 \item 一个能同步上述组件的硬件设施
 \end{enumerate}
 
-说的直白点，一个BSP模型就是一系列的处理器，每个处理器都能做计算且配置着高速的本地内存，所有处理器之间可以通过通信网络之间进行信息交流。一个基于BSP模型的算法，最依赖的是上述的第三个要点，一个BSP算法的执行由很多超步组成，每个超步都包含三部分
+说的直白点，一个BSP模型（图2）就是一系列的处理器，每个处理器都能做计算且配置着高速的本地内存，所有处理器之间可以通过通信网络之间进行信息交流。一个基于BSP模型的算法，最依赖的是上述的第三个要点，一个BSP算法的执行由很多超步组成，每个超步都包含三部分
 
 \begin{enumerate}
 \item 并行计算，即每个处理器之间的计算是并行的
@@ -52,24 +52,58 @@ Tinkerpop的OLAP部分主要用于全图分析（即相关计算必须涉及到�
 \item 栅栏同步，后续计算的开始必须在满足某个条件的情况下在能继续
 \end{enumerate}
 
-Tinkerpop采用了BSP模型，所以相应图计算算法的设计，必须符合BSP的模型要求，接下来说明一下Tinkerpop的OLAP部分对BSP模型的框架实现。
+Tinkerpop的OLAP部分就采用了BSP模型，所以相应图计算算法的设计，必须符合BSP的模型要求，接下来说明一下Tinkerpop的OLAP部分对BSP模型的框架实现。请参看图3中的Tinkerpop对BSP实现的示意。
 
-请对照看下方两图。
+\begin{figure*}
+    \centering
+        \includegraphics[width=0.7\textwidth]{/Users/fox/bsp.png}
+        \caption{BSP模型示意图}
+\end{figure*}
 
-可以发现，BSP中的处理器对应着Tinkerpop图里面的一个个顶点，BSP传递信息的网络对应着Tinkerpop里面对应的消息传递组件，BSP中同步组件的设施就对应这Tinkerpop中的下一轮计算进行前的消息处理。
+\begin{figure*}
+    \centering
+        \includegraphics[width=0.7\textwidth]{/Users/fox/tp-bsp.png}
+        \caption{Tinkerpop对BSP模型的实现}
 
-\subsection{Tinkerpop单节点OLAP的架构与实现}
-TinkerGraph是一个实现了Tinkerpop所有规范的内存图数据库，我们在开发gdm的OLAP时，就参考了TinkerGraph的流程。TinkerGraph作为一个内存图数据库，并没有考虑分布式，所以TinkerGraph的OLAP就是单节点的。
+\end{figure*}
+
+
+可以发现，BSP中的处理器对应着Tinkerpop图里面的一个个顶点，BSP传递信息的网络对应着Tinkerpop里面对应的消息传递组件，BSP中同步组件的设施就对应这Tinkerpop中的下一轮计算进行前的消息同步，顶点执行的算法就是VertexProgram，在整个计算过程中，每个顶点接收上一轮发送给自己的消息，作为VertexProgram算法执行时的输入，然后执行计算流程，将产生的结果也作为消息传递给下一轮作为某个顶点的输入，每个顶点在每执行完一次VertexProgram之后需要判断是否满足算法的结束条件（比如PageRank算法中规定的迭代次数是否已经达到或者PageRank的值已经趋于收敛），当所有顶点都满足算法的结束条件之后，整个算法流程执行完毕，这就是BSP也是Tinkerpop OLAP的计算核心流程。这里面需要注意的有两点，第一是所有要执行的算法必须按照BSP模型编写，这可能和我们平常使用的算法有所出入；第二是要确定好消息的类型，确保消息能够正确的表达算法数据的传递，比如在PageRank中传递的消息就是数值类型，而在最短路中传递的消息就是包含路径、边和对应数值型数据的三元组信息。
+
+整个BSP模型以消息传递为核心，这是BSP模型的亮点，同时也限制了该模型，当计算过程中产生大量信息导致系统无法处理的时候，这个基于消息传递的BSP算法就会彻底崩溃。
+
+\subsection{Tinkerpop已有的OLAP的实现}
+TinkerGraph是一个实现了Tinkerpop所有规范的内存图数据库，我们在开发gdm的OLAP时，就参考了TinkerGraph的流程。TinkerGraph作为一个内存图数据库，其OLAP的实现也是主要面对内存的，消息传递组件就是内存中的基于顶点和对应消息队列的一个共享对象。
 
 TinkerGraph的OLAP的实现主要如下
+
 \begin{itemize}
-\item 实现GraphComputer接口做任务的提交和执行
-\item 顶点均分为N份，交由N个线程各自计算
-\item 使用共享的内存对象做消息接收和传递组件
+\item 实现GraphComputer接口做图计算任务的提交和执行和结果的处理
+\item 顶点均分为N份，交由N个线程轮询自己负责计算的顶点并执行计算
+\item 使用共享的内存对象做消息接收和传递
 \end{itemize}
+
+在这个实现里面，使用共享的内存对象做消息接收和传递这一条将会在消息数据量巨大的情况下成为OLAP部分的瓶颈甚至是直接导致运算时出现OOME（Out of Memory Error）从而导致相关服务宕机。
 
 \subsection{Tinkerpop分布式OLAP架构设想}
 
+单机OLAP在消息量大情况下的缺陷使得我们不得不想办法解决这个问题，在我7月份经历过对基于Tinkerpop属性图模型实现的Titan、HugeGraph和JanusGraph的调研以及对BSP模型的进一步了解之后，基于BSP模型和Tinkerpop OLAP流程，我构想出了图4所示的一个分布式OLAP架构
+\begin{figure*}
+    \centering
+        \includegraphics[width=0.75\textwidth]{/Users/fox/tp-dis.png}
+        \caption{Tinkerpop分布式OLAP设想}
+\end{figure*}
+
+
+其实这个模型就是基于单机OLAP改进而来的，它和单机OLAP存在下面的对应关系
+
+\begin{enumerate}
+\item 单机的多线程对应分布式的多个worker计算节点
+\item 单机的共享消息存放组件对应分布式的master节点的消息服务组件
+\item 单机中的消息对象对应着分布式中在网络中传递的消息
+\end{enumerate}
+
+整体来看，这个分布式的思路和单节点的思路是一致的，也比较具有可实施性，但是仔细往下思考可以发现这里面有很多问题需要解决，现在想到的问题主要有消息在超步执行之间的同步和保证消息正常发送和接收，以及计算节点和主节点的意外下线等，这些都是我们在未来需要解决的问题。
 
 \end{document}
 
