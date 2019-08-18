@@ -30,5 +30,17 @@ MCK主要维护一个BinaryOperator，用于在图计算中将多个并行的值
 4. vp执行完毕，开始执行mr
 5. 结束，返回结果
 
+### vp是如何被每个顶点使用的
+
+工作线程轮询自己的顶点，在每个顶点上执行vp的代码，通过一个三元消费者的函数式将代码传递给顶点
+
+### 每个顶点的消息接收和传递
+
+在Tinkerpop里面，是通过消息发送器发送消息，消息接收器接收消息的，消息的存放有消息接收器和发送器决定，在TinkerGraph中，消息存放在一个MessageBoard里面，这是一个内存共享对象，非常适合TinkerGraph这个内存图数据库。
+
+不同的VP有不同类型的消息，比如Pagerank里面的消息是Double类型的值。
+
+如果将消息通过网络传递，将工作线程替换为多个工作节点，那么就是分布式的一个架构。
+
 ### 参考
 * [官方文档-olap实现](http://tinkerpop.apache.org/docs/3.4.2/dev/provider/#olap-implementations)
