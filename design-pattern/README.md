@@ -7,10 +7,13 @@
 这四位前辈分别是（下图中从左到右）Ralph Johnson，Richard Helm，Eric Gamma，John Vlissides。
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jsycdut/photos/master/design-pattern/gang-of-four.jpg">
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/design-pattern/gang-of-four.jpg">
 </p>
 
-设计模式分为三大类，分别是 **创建型模式** **结构型模式** **行为型模式**
+设计模式分为三大类，分别是 **创建型模式** **结构型模式** **行为型模式**，对应着下图的C S B三种分类。
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/design-pattern/23-design-patterns.png">
+</p>
 
 
 ## 创建型模式
