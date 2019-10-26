@@ -3,12 +3,22 @@
   <img src=""/>
 </p>
 <p align="center"></p>
+
 `作者：金世钰`
 
+## sofa-bolt主要代码模块UML
 sofa-bolt作为一个通信框架，整体来看，是对Netty的一个封装，其底层仍然是Netty的体系，只是在上面做了一些自定义的处理，比如连接的管理，请求模式的封装，结果的处理等等，对外提供了比较友好的接口，使得用户不必关心底层的实现，不像Tinkerpop那样直接拿Netty来进行编程。封装的好处就在于使用更加简单了，但是封装的弊处也在于用户无法掌握细节，在遇到莫名的bug时无处下手，也没办法进行定制。
 
 ~~本文主要分析sofa-bolt的源码结构，在分析时，主要走两遍代码，第一遍主要注重于功能的阅读，不要纠结于细节实现，否则容易钻入牛角尖无法自拔，在理清了功能之后，则针对较为重要的功能点进行细节性的代码实现进行分析。~~
 
+### 框架示意
+sofa-bolt官方文档对sofa-bolt的架构如下图，主要分为协议实现，协议骨架和远程核心调用接口三部分组成
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/intro.png"/>
+</p>
+<p align="center"></p>
+
+### c/s端划分
 sofa-bolt基于c/s模型，也就是客户端/服务器模式，一个发请求，一个接受请求并处理请求然后回应结果。c/s整体的UML体系图如下所示。
 
 <p align="center">
@@ -40,6 +50,7 @@ AbstractBoltClient <|-- RpcClient
 @enduml
 
 
+### 对外暴露接口
 在sofa-bolt中，将Netty封装后提供的接口主要在BaseRemoting为基类的类中，其继承结构主要如下图所示
 <p align="center">
   <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/bolt-remote.png"/>
@@ -49,6 +60,8 @@ AbstractBoltClient <|-- RpcClient
 
 其中，BaseRemoting主要定义了通信的几种方式，包括oneway, invokeSync, invokeWithFuture, invokeWithFuture四种，然后RpcRemoting进行了部分细化，将c端和s端的具体实现交给了RpcClientRemoting和RpcServerRemoting进行实现，这也是考虑日后扩展的的一种方式吧。这里的结构有点类似门面模式。上面的RpcClient和RPCServer也提供了对外的通信的接口，主要是对这里BaseRemoting相关方法的调用，比如RpcClient提供的oneway调用方式，其实是调用其内部RpcClientRemoting的oneway方法，细节由RpcClientRemoting处理，RpcClient就是调用就行了，这一点有点像Spring MVC里面的Controller层调用Service层的方法，然后Service层又调用Dao层的方法一样，是个一层层的调用（是层级调用，不是链式调用）。
 
+
+### 请求响应封装
 sofa-bolt将请求响应封装成了以RemotingCommand为基类的一系列Command实现，请求封装为RequestCommand，响应封装为ResponseCommand，特定类型的Command又继续细分，其继承体系结构如下图
 
 <p align="center">
@@ -71,3 +84,24 @@ sofa-bolt将请求响应封装成了以RemotingCommand为基类的一系列Comma
 <p align="center">sofa-bolt的命令制造工厂</p>
 
 在CommandFactory里面，涉及到了对应Command的封装和对应的序列化器的设置，结果的设置等，都是给了当前的Command一个标记，在另一个地方将会取出这些标记，然后根据标记去找对应的组件，来解析这个Command。
+
+### 连接创建和管理
+每一个请求和响应，都是和一个客户端和服务器端的连接相关的，这里涉及到了Connection的一系列东西，主要是Connection的创建、管理、相关事件的处理等，Connection这个实体类倒是没什么好说的，主要是对Netty Channel的封装，Connection的创建，涉及到一个ConnectionFactory，大部分重体力活都交给了AbstractConnectionFactory，具体见下图。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/ConnectionFactory.png"/>
+</p>
+<p align="center">sofa-bolt中的连接创建</p>
+
+连接管理（ConnectionManager）是一个重头戏，涉及到连接的创建（调用ConnectionFactory进行创建），连接池中的连接的移除等，整个体系也比较复杂，ConnectionManager的继承体系如下图
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/ConnectionManager.png"/>
+</p>
+<p align="center">sofa-bolt中的连接管理</p>
+
+
+## sofa-bolt s端启动时序图
+
+## sofa-bolt c端启动时序图
+
+## 请求处理和响应时序图
