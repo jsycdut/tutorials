@@ -1,0 +1,96 @@
+\documentclass{article}
+\usepackage{multicol}
+\usepackage[UTF8]{ctex}
+\usepackage{xcolor}
+\usepackage{abstract}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usetikzlibrary{graphs}
+\usetikzlibrary{arrows, patterns, positioning}
+
+\title{Paxos-Raft-Zab算法调研文档}
+\author{金世钰，\textbf{四川蜀天梦图数据科技有限公司}}
+
+% 双栏设置
+\setlength{\columnsep}{1cm}
+
+% 超链接设置
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本文主要介绍了Paxos、Raft和Zab三种目前业界主流采用的共识算法，为分布式图计算主节点选举提供备选算法方案。
+\end{abstract}
+\begin{multicols}{2}
+
+\section{前言}
+目前，图计算小组开发的分布式图计算模型基于原有Tinkerpop所采用的BSP计算模型，已经能够成功使用多个节点，共同执行Pagerank算法并得出正确结果。其计算模型大致如下图所示。
+
+\input{arch}
+
+该模型涉及到一个协调各节点的leader节点，但是在该模型中，leader节点存在单点问题，当leader节点下线时（节点故障、重启或者被网络隔离开），集群便陷入“群龙无首”的困境，此时分布式计算任务无法派发，整个计算流程就卡死在第一步。所以需要一个算法，使得集群中leader节点下线时，能够自动选举出新的leader节点，从而解决leader节点的单点问题。
+
+本次调研主要是为分布式图计算主节点选举提供参考方案，调研了当前分布式系统用到的主流算法，包括Paxos、Raft和Zab三种算法。这三种算法都是分布式共识算法，本身内容不仅仅局限于集群中主节点选举这一部分，但是根据我们分布式图计算系统的需要，我们暂时只关注于算法中的主节点选举部分，或者只将算法用于主节点选举。 
+
+\section{算法介绍}
+
+\subsection{Paxos}
+Paxos算法由2013年图灵奖获得者\emph{Leslie Lamport}在1990率先提出，该算法主要是用于解决分布式系统的一致性问题，也就是分布式中所有成员对某个提议如何达成共识的问题。
+
+Paxos算法在1990年时并没有得到发表，起因是该算法以一种类似于拜占庭将军的形式对算法进行描述，当时的编辑拒绝对此文进行发表，直到8年之后的1998年，有一个团队需要在分布式系统中达成共识，此时Lamport将算法给了他们并且得到了实施，尔后Lamport再次发表了该算法，也就是著名的《The Part-Time Parliament》，但是对读者来说，该故事性的算法描述却仍然难以理解，直到2001年，Lamport再次修改该算法的表述，发表了论文《Paxos Made Simple》，清晰的解释了该算法。随后，Google公司的Mike Burrows在2006年发表了论文《The Chubby lock service for loosely-coupled distributed systems》，其中就使用了Paxos算法作为其一致性算法，此后Paxos算法受到热烈欢迎。
+
+本文主要参考了论文\href{https://lamport.azurewebsites.net/pubs/paxos-simple.pdf}{《Paxos Made Simple》}
+
+Paxos作为分布式系统中的共识性算法，其主要解决的便是分布式系统中的成员就某事如何达成共识，在分布式图计算中，这个共识就是：谁是主节点？
+
+接下来，主要介绍Paxos算法如何达成一致。
+
+Paxos算法有两个确保共识的要求（论文中表述为三个，但是其第二和第三点其实是同一点），分别是
+	\begin{enumerate}
+		\item 被提议的值可以有多个，但是最终只会有一个被选择
+		\item 只有一个值会被最终选择，并且被选中的值只有被真正选中之后才会被告知给其他所有的成员
+	\end{enumerate}
+
+在整个算法中，所有成员可以被归类为三种角色，分别是
+	\begin{itemize}
+		\item proposers，负责提议某个值
+		\item acceptors，负责检验proposers提出的值
+		\item learners，负责告知所有成员最后选定的值
+	\end{itemize}
+
+成员之间可以通过互发消息进行通信，整个消息传递使用异步的消息，并且是非拜占庭模型，也就是说
+	\begin{itemize}
+		\item 成员可以停机、重启，成员需要能够保存住某些信息；
+		\item 消息传递需要经历一定的时间段，消息可以重复，可以丢失，但是消息一定是完整的。
+	\end{itemize}
+
+	在整个系统中，有以下几点要求
+
+	\begin{enumerate}
+		\item accptors必须接受第一个被提议的值
+
+
+\subsection{Raft}
+
+Raft一般指由斯坦福大学的Diego Ongaro和 John Ousterhout在2014年发表的博士论文《In Search of an Understandable Consensus Algorithm》中提出的分布式系统共识算法。
+
+该论文主要包括主节点选举和日志复制两部分，其中和我们分布式图计算有关的是主节点选举。
+
+
+
+\subsection{Zab}
+
+
+
+
+
+\end{multicols}
+
+\end{document}
