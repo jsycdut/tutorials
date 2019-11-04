@@ -28,7 +28,7 @@
 \begin{abstract}
 本文主要介绍了Paxos、Raft和Zab三种目前业界主流采用的共识算法，为分布式图计算主节点选举提供备选算法方案。
 \end{abstract}
-\begin{multicols}{2}
+%\begin{multicols}{2}
 
 \section{前言}
 目前，图计算小组开发的分布式图计算模型基于原有Tinkerpop所采用的BSP计算模型，已经能够成功使用多个节点，共同执行Pagerank算法并得出正确结果。其计算模型大致如下图所示。
@@ -60,9 +60,9 @@ Paxos算法有两个确保共识的要求（论文中表述为三个，但是其
 
 在整个算法中，所有成员可以被归类为三种角色，分别是
 	\begin{itemize}
-		\item proposers，负责提议某个值
-		\item acceptors，负责检验proposers提出的值
-		\item learners，负责告知所有成员最后选定的值
+		\item proposer，负责提议某个值
+		\item acceptor，负责检验proposers提出的值，可以选定值，也可以拒绝值
+		\item learner，负责获取最后选定的值
 	\end{itemize}
 
 成员之间可以通过互发消息进行通信，整个消息传递使用异步的消息，并且是非拜占庭模型，也就是说
@@ -74,16 +74,34 @@ Paxos算法有两个确保共识的要求（论文中表述为三个，但是其
 	在整个系统中，有以下几点要求
 
 	\begin{enumerate}
-		\item accptors必须接受第一个被提议的值
+		\item 提议的值的形式为<n, v>分别代表编号为n，取值为v的一次提议
+		\item accptors必须接受第一个被提议的值，每个acceptor可以接收多个提议的值
+		\item 如果一个提议<$n_{1}$, $v_{1}$>被最后选中，那么所有编号大于$n_{1}$的提议如果被选中，那么该提议的值也必须是$v_{1}$。本要求暗含这以下两点
+			\begin{enumerate}
+				\item 如果一个<n, v>的提议被最终选中，那么每个被acceptor接收的且编号大于n的提议必须拥有值v
+				\item 如果一个<n, v>的提议被最终选中，那么每个被proposer发布的且编号大于n的提议的值必须是v
+			\end{enumerate}
+		\item 系统中的请求分为两类，分别是prepare请求和accept请求两种，都由proposer提出，前者用于发出自己提议的值，后者用于当自己提议的值被大多数acceptor接收时再次请求接收自己的值（因为可能有多个proposer的prepare请求被通过，accept相当于二次确认）
+		\item 一个acceptor当接收到prepare请求时，如果没有接收到大于该请求序号的其他请求，那么久接受该prepare请求，并响应其之前接收到的最大的prepare请求的值，并且承诺，不接受其他请求序号小于当前接受请求序号的prepare请求
+	\end{enumerate}
 
+整个算法大致可以用两个阶段来进行描述，分别是
 
+	\textbf{第一阶段}
+
+	一个proposer选择一个编号n并且向大多数的acceptor节点发送prepare请求
+	如果一个acceptor如果接收到的prepare请求的编号n大于之前接收到的所有prepare请求的编号，那么返回之前接收到的编号最大的prepare请求（可能不存在这样的请求）里的值给proposer，并且承诺，不再响应编号小于n的prepare请求。
+
+	\textbf{第二阶段}
+        \begin{enumerate}
+	\item 如果一个接收到自己之前发送的编号为n的prepare请求的响应并且这些响应来自大多数的acceptor，那么就向大多数的acceptor发送编号为n，值为自己接收到的响应中的最大的值的accept请求。
+        \item 如果一个acceptor接收到了一个编号为n的accept请求，那么就需要接受该请求的值，除非自己又接收到了编号大于n的prepare请求。
+        \end{enumerate}
 \subsection{Raft}
 
 Raft一般指由斯坦福大学的Diego Ongaro和 John Ousterhout在2014年发表的博士论文《In Search of an Understandable Consensus Algorithm》中提出的分布式系统共识算法。
 
 该论文主要包括主节点选举和日志复制两部分，其中和我们分布式图计算有关的是主节点选举。
-
-
 
 \subsection{Zab}
 
@@ -91,6 +109,6 @@ Raft一般指由斯坦福大学的Diego Ongaro和 John Ousterhout在2014年发�
 
 
 
-\end{multicols}
+%\end{multicols}
 
 \end{document}

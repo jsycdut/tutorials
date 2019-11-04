@@ -1,0 +1,18 @@
+\begin{center}
+\begin{tikzpicture}[scale=0.5,
+      blue circle/.style={circle, draw=blue!50, fill=blue!20, thick, minimum size=6mm},
+      transition/.style={rectangle, draw=black!75,fill=black!20},
+      red circle/.style={blue circle, draw=red!50, fill=red!20},
+      green circle/.style={blue circle, draw=green!20, fill=green!50}
+    ]
+	\draw[help lines] (-5, -5) grid(5, 5);
+        \draw[thick, red, -latex] (-5, 0) -- (5, 0);
+        \draw[thick, red, -latex] (0, -5) -- (0, 5);
+	    \draw[color=green!20] (-5, -4) rectangle (5, -2);
+	    \node[blue circle] (client) at (0, 4) {客户端};
+	    \node[red circle] (leader) at (0, 1) {主节点}; % edge[latex-, bend left=10, thick] node[sloped, anchor=center, above, text width=1.2cm] {\tiny{提交计算任务}} (client) edge[-latex, bend right=10, thick] node[sloped, anchor=center, above, text width=1.2cm] {\tiny{返回计算结果}} (client);
+	    \node[green circle] (f1) at (-4, -3) {从节点};
+	    \node[green circle] (f2) at (0, -3) {从节点}; %edge[latex-, bend left=10, thick] node[sloped, anchor=center, above, text width=1.6cm] {\tiny{接收超步计算消息}} (leader) edge[-latex, bend right=10, thick] node[sloped, anchor=center, below, text width=1.6cm] {\tiny{返回超步计算结果}} (leader);
+	    \node[green circle] (f3) at (4, -3) {从节点};
+    \end{tikzpicture}
+\end{center}
