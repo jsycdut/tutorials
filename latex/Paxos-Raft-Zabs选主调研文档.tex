@@ -20,7 +20,7 @@
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,      
-    urlcolor=cyan,
+    urlcolor=red,
 }
 
 \begin{document}
@@ -32,11 +32,16 @@
 %\begin{multicols}{2}
 
 \section{前言}
-目前，图计算小组开发的分布式图计算模型基于原有Tinkerpop所采用的BSP计算模型，已经能够成功使用多个节点，共同执行Pagerank算法并得出正确结果。其计算模型大致如下图所示。
+目前，图计算小组开发的分布式图计算模型基于原有Tinkerpop所采用的BSP计算模型，已经能够成功使用多个节点，共同执行Pagerank算法并得出正确结果。其计算流程大致为一个主节点协调多个从节点执行计算任务，最后由主节点综合计算结果。
 
-\input{arch}
+%\begin{figure}[hb]
+%	\centering
+%	\includegraphics[scale=0.1]{tp-dis.png}
+%	\caption{分布式图计算总体架构}
+%	\label{fig:label}
+%\end{figure}
 
-该模型涉及到一个协调各节点的leader节点，但是在该模型中，leader节点存在单点问题，当leader节点下线时（节点故障、重启或者被网络隔离开），集群便陷入“群龙无首”的困境，此时分布式计算任务无法派发，整个计算流程就卡死在第一步。所以需要一个算法，使得集群中leader节点下线时，能够自动选举出新的leader节点，从而解决leader节点的单点问题。
+该模型涉及到一个协调各节点的Leader节点，但是在该模型中，Leader节点存在单点问题，当Leader节点下线时（节点故障、重启或者被网络隔离开），集群便陷入“群龙无首”的困境，此时分布式计算任务无法派发，整个计算流程就卡死在第一步。所以需要一个算法，使得集群中Leader节点下线时，能够自动选举出新的Leader节点，从而解决Leader节点的单点问题。
 
 本次调研主要是为分布式图计算主节点选举提供参考方案，调研了当前分布式系统用到的主流算法，包括Paxos、Raft和Zab三种算法。这三种算法都是分布式共识算法，本身内容不仅仅局限于集群中主节点选举这一部分，但是根据我们分布式图计算系统的需要，我们暂时只关注于算法中的主节点选举部分，或者只将算法用于主节点选举。 
 
@@ -100,7 +105,7 @@ Paxos算法有两个确保共识的要求（论文中表述为三个，但是其
         \end{enumerate}
 
 
-\textit{常见例子}
+\textbf{常见例子}
 
 在网上很多关于Paxos算法的文章中，都引用了下面的例子。
 
@@ -136,21 +141,21 @@ Paxos算法有两个确保共识的要求（论文中表述为三个，但是其
 至此，所有Acceptor对所有Proposer提出的prepare request请求处理完毕，Proposer A总共收到了2次prepare response响应，B同理，都得到了3个Acceptor中的大部分响应（同意），所以Proposer A和B都将会发起下一次的accept request请求，再次确认自己的值被接受。注意，在发起accept request时，其请求序号和之前的prepare request序号一致，但是对应的值却是选自己之前接收到的prepare response中的值中的最大者，如果prepare response是[no previous]，那么在accept request中的值就是prepare request中的值。
 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.5]{4.png}
 	\caption{Proposer B发起accept request}
 	\label{fig:label}
 \end{figure}
 
-图4中只画出了Proposer B发起的accept request请求，并没有画出Proposer A的accept请求，这不是说Proposer A没有发起，而是它虽然发起了，但是被所有的Acceptor抛弃了，这是因为，在之前所有acceptor处理prepare request请求的时候，都承诺了不响应请求序号小于4的请求，所以Proposer的请求都被抛弃了。另外，Proposer的accept请求是[n=4, v=8]，而不是原来自己发起prepare request的[n=4, v=5]，这是因为在发送accept request时，取值是自己收到的prepare response中的最大值，也就是prepare request[n=2, v=8]中的8。
-
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.5]{5.png}
 	\caption{Learner获取最终接受的提议值}
 	\label{fig:label}
 \end{figure}
+
+图4中只画出了Proposer B发起的accept request请求，并没有画出Proposer A的accept请求，这不是说Proposer A没有发起，而是它虽然发起了，但是被所有的Acceptor抛弃了，这是因为，在之前所有acceptor处理prepare request请求的时候，都承诺了不响应请求序号小于4的请求，所以Proposer的请求都被抛弃了。另外，Proposer的accept请求是[n=4, v=8]，而不是原来自己发起prepare request的[n=4, v=5]，这是因为在发送accept request时，取值是自己收到的prepare response中的最大值，也就是prepare request[n=2, v=8]中的8。
 
 当acceptor接收到的accept request请求的序号大于等于自己承诺接受的最小序号，在本例中为4，那么就告知所有的learner，自己接受了某个值，在本例中是8，当所有learner发现了大多数的acceptor都接受了某个值，那么该值就是最终的达成共识的值，也就是8，如图5所示。
 
@@ -161,14 +166,16 @@ Paxos算法有两个确保共识的要求（论文中表述为三个，但是其
 
 Raft一般指由斯坦福大学的Diego Ongaro和 John Ousterhout在2014年发表的博士论文《In Search of an Understandable Consensus Algorithm》中提出的分布式系统共识算法。
 
-该论文主要包括主节点选举和日志复制两部分，其中和我们分布式图计算有关的是主节点选举。
+该论文主要提出了一种易于理解的分布式共识算法，其侧重点是可理解性。
+
+本节内容主要来自\href{https://raft.github.io/raft.pdf}{《In Search of an Understandable Consensus Algorithm》}中的第5节。
 
 在Raft的主节点选举中，主要包含两个时间度量，分别是心跳时间和选举时间。另外每个节点至少有3个状态，分别是Follower（从节点），Candidate（主节点候选人），Leader（主节点）。
 
 对于任意Follower节点而言，如果没有在心跳时间内接收到来自Leader的心跳消息，那么就认为此时Leader节点已经下线（可能是Leader节点已关闭或者被网络隔离开），此时将等待一个150ms～300ms的随机选举时间，将自己的状态提升到Candidate，当状态提升完成后，就向集群中所有的节点发起投票请求，请求自己成为新的Leader，如果该请求得到了来自集群大多数（一半以上）的同意，那么自己就成为集群新的Leader，并间隔一定时间向所有的其他节点发送心跳消息，以维持自己的Leader身份。
 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.5]{r1.png}
 	\caption{Node B最先进入Candidate状态}
@@ -177,17 +184,41 @@ Raft一般指由斯坦福大学的Diego Ongaro和 John Ousterhout在2014年发�
 
 图6中有三个Raft节点，其中Node B拥有最小的选举时间，这意味着它最快进入Candidate状态，然后Node B向Node A和Node C发送选举请求，由于Node B和Node C都没有对其他主节点候选人投票，所以都将票投给Node B，同时Node B也给自己投票，因此Node B最后拥有3票投票，也就是得到了集群大多数节点（一半及以上）的同意，因此Node B成为主节点，之后它将定时向其他所有顶点发送心跳信息，以维持自己的主节点身份。
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.5]{state-machine.png}
+	\caption{Raft节点状态机}
+	\label{fig:label}
+\end{figure}
+
 整体来看，Raft的选主算法相当简单明了，不用像Paxos那样要发多次的请求，但是Raft算法仍然有许多细节需要注意。
+
+\textbf{每个节点拥有哪些状态？状态是如何迁移的？}
+
+节点状态可以见图7中的节点状态机，主要包含Follower、Candidate和Leader三种状态，并且每个状态之间可以在一定条件下相互转换，所以节点在刚开始时都处于Follower状态。
 
 \textbf{每个Candidate的投票请求需要包含哪些凭据？}
 
-\textbf{Follower节点如何判断一个投票请求是否值得投票？}
+每个投票请求，需要给出自己竞选Leader的任期term，以及自己作为候选人的标识符CandidateId，除此之外，还需要给出上一次执行的日志标记和日志所在的Leader任期。
 
+\textbf{Follower节点如何判断一个候选人的投票请求是否值得投票？}
+
+如果投票请求中的任期小于自己的当前所拥有的任期（对于Follower节点也有任期），那么直接拒绝，如果投票请求中的日志比当前自己所有的日志标记要小，那么也拒绝。只有请求中的任期比自己当前所拥有的任期要大而且日志标记和自己一致或者更新的，才进行投票。
+
+\textbf{对所有节点而言，是否有需要持久化的值，比如遭遇宕机的情况？}
+
+有。所有节点，必须持久化保存当前任期值，自己所投票支持的Leader节点的标识，以及日志记录。
+
+\textbf{一个Candidate节点的选举过程是怎样的？}
+
+当在心跳超时时间内没有接收到Leader节点的消息时，就进入Candidate状态，首先增加自己的任期，然后投票给自己，重置超时计时器，并向其他所有节点发送投票请求，当投票请求得到集群大多数节点的赞同时，就升任为Leader，如果在还没有升任Leader的过程中收到了Leader的心跳信息，那么将自己从Candidate状态降级为Follower状态，如果选举超时仍然没有得到大多数的投票赞同也没有得到Leader的心跳消息，那么再次发起选举。
+
+Raft作为一个分布式共识算法，就和其论文题目所述一样，是一个易于理解的共识算法，本节仅仅是论文中主节点选举的部分理解，其内容并不止于此，如果需要更好的理解Raft的所有内容，可以参考\href{https://raft.github.io/raft.pdf}{《In Search of an Understandable Consensus Algorithm》}
 
 
 \subsection{Zab}
 
-
+Zab是ZooKeeper Atomic Broadcast Protocol的缩写，用于维持ZooKeeper集群中的状态一致的协议。
 
 
 
