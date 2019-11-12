@@ -218,7 +218,7 @@ Raft作为一个分布式共识算法，就和其论文题目所述一样，是�
 
 \subsection{Zab}
 
-Zab是ZooKeeper Atomic Broadcast Protocol的缩写，用于维持ZooKeeper集群中的状态一致的协议。
+Zab是ZooKeeper Atomic Broadcast Protocol的缩写，用于维持ZooKeeper集群中的状态（集群数据副本）一致的协议。整体上来说，Zab和Raft有些许相似之处，尤其在主节点数据操作方面，比如集群里的写操作，都需要先经由主节点处理，再交与其他从节点进行处理，发送到从节点上的请求，从节点要对此请求进行转发，交由主节点处理，所以Zab中的主节点，依然是一个强主节点。Zab中的节点，主要分为三个角色，分别是Leader、Follower以及Observer，其中主节点负责维护整个集群，确保自己的身份声明，定期和Follower和Observer通过心跳信息交流，Follower负责响应Leader的数据写入更新等操作，以及在选举主节点是进行投票，响应客户端的读请求，并将客户端的写请求转交给主节点，Observer就是一个没有主节点选举投票权的特殊Follower，该角色的设立应该是为了增加整个集群的可读性，提高读的命中率。
 
 
 
