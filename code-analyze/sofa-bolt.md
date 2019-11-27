@@ -100,8 +100,18 @@ sofa-bolt将请求响应封装成了以RemotingCommand为基类的一系列Comma
 <p align="center">sofa-bolt中的连接管理</p>
 
 
-## sofa-bolt s端启动时序图
-
-## sofa-bolt c端启动时序图
+## sofa-bolt s端启动流程图
+<p align="center"
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/init-client.png"/>
+</p>
+## sofa-bolt c端启动流程图
 
 ## 请求处理和响应时序图
+
+在发送请求这一块，由RpcClient提供最外层的api接口，然后由其内部的RpcRemoting具体执行，在执行之前，需要先获取和服务端的连接对象Connection，然后才能发送具体的请求，根据请求方式的不同，可能有返回结果，也可能没有返回结果。
+
+发送请求的时序图如下图所示
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/send-request.png"/>
+</p>
+
