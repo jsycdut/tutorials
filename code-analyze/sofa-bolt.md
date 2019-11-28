@@ -9,8 +9,6 @@
 ## sofa-bolt主要代码模块UML
 sofa-bolt作为一个通信框架，整体来看，是对Netty的一个封装，其底层仍然是Netty的体系，只是在上面做了一些自定义的处理，比如连接的管理，请求模式的封装，结果的处理等等，对外提供了比较友好的接口，使得用户不必关心底层的实现，不像Tinkerpop那样直接拿Netty来进行编程。封装的好处就在于使用更加简单了，但是封装的弊处也在于用户无法掌握细节，在遇到莫名的bug时无处下手，也没办法进行定制。
 
-~~本文主要分析sofa-bolt的源码结构，在分析时，主要走两遍代码，第一遍主要注重于功能的阅读，不要纠结于细节实现，否则容易钻入牛角尖无法自拔，在理清了功能之后，则针对较为重要的功能点进行细节性的代码实现进行分析。~~
-
 ### 框架示意
 sofa-bolt官方文档对sofa-bolt的架构如下图，主要分为协议实现，协议骨架和远程核心调用接口三部分组成
 <p align="center">
@@ -102,15 +100,23 @@ sofa-bolt将请求响应封装成了以RemotingCommand为基类的一系列Comma
 <p align="center">sofa-bolt中的连接管理</p>
 
 
-## sofa-bolt s端启动流程图
-<p align="center"
+## sofa-bolt C端启动流程图
+sofa-bolt C端，主要是封装了各个组件的RpcClient类，RpcClient的启动，就是其内部封装的各个组件的启动和配置。RpcClient主要包含连接管理器、地址解析器、连接事件监听器、连接事件处理器，用户自定义请求处理器以及最主要的RPC内部调用接口。
+<p align="center">
   <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/init-client.png"/>
 </p>
-## sofa-bolt c端启动流程图
+
+## sofa-bolt S端启动流程图
+sofa-bolt S端，主要是RPCServer类，这个类和RpcClient大体上类似，但是不同的是RPCServer明显多出了和Netty的EventLoopGroup，显式的调用Netty，在RpcClient中，调用RpcClient需要创建连接时才会调用Netty相关的组件，S端的也提供了和C端类似的请求方式，并且也是通过内部的RPC内部调用接口实现具体的操作的。S端在启动时需要提供至少一个端口参数，而C端在启动时不需要。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jsycdut/photos/master/sofa-bolt/server-init.png"/>
+</p>
+<p align="center"></p>
 
 ## 请求处理和响应时序图
 
-在发送请求这一块，由RpcClient提供最外层的api接口，然后由其内部的RpcRemoting具体执行，在执行之前，需要先获取和服务端的连接对象Connection，然后才能发送具体的请求，根据请求方式的不同，可能有返回结果，也可能没有返回结果。
+在发送请求这一块，由RpcClient提供最外层的api接口，然后由其内部的RpcRemoting具体执行，在执行之前，需要先获取和服务端的连接对象Connection，连接这一块由连接池提供，在首次连接时，需要先创建一个连接池，然后再由其内部逻辑创建Connection（根据目标地址的URL），然后才能发送具体的请求，根据请求方式的不同，可能有返回结果，也可能没有返回结果。
 
 发送请求的时序图如下图所示
 <p align="center">
