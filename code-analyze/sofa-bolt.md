@@ -163,7 +163,7 @@ sofa-bolt S端，主要是RPCServer类，这个类和RpcClient大体上类似，
 
 ## sofa-bolt源码分析
 
-接下来主要分析sofa-bolt中的组件源码，看一看蚂蚁金服的程序员的编程功力。
+接下来主要分析sofa-bolt中的组件源码，未完待续。
 
 ### 请求和结果获取
 
