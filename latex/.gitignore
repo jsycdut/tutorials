@@ -1,0 +1,8 @@
+# tex middle output
+*.nav
+*.toc
+*.aux
+*.log
+*.snm
+*.out
+
