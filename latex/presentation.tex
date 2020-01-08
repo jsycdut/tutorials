@@ -1,5 +1,7 @@
 \documentclass{beamer}
 \usepackage[UTF8]{ctex}
+\usepackage{array}
+\usepackage{tabularx}
 
 \usetheme{Dresden}
 \usecolortheme{dolphin}
@@ -49,7 +51,7 @@
   \column{0.52\textwidth}
 
   \begin{itemize}
-  \item 图计算小组的成立，2019.04
+  \item 图计算小组的成立，2019.03
   \end{itemize}
   \end{columns}
 
@@ -63,7 +65,7 @@
   \column{0.52\textwidth}
 
   \begin{itemize}
-  \item 图计算小组的成立，2019.04
+  \item 图计算小组的成立，2019.03
   \item 从无到有的图计算，2019.06
   \end{itemize}
   \end{columns}
@@ -78,9 +80,9 @@
   \column{0.52\textwidth}
 
   \begin{itemize}
-  \item 图计算小组的成立，2019.04
+  \item 图计算小组的成立，2019.03
   \item 从无到有的图计算，2019.06
-  \item 单机图计算的增强，2019.11
+  \item 单机图计算的增强，2019.10
   \end{itemize}
   \end{columns}
 
@@ -95,9 +97,9 @@
   \column{0.52\textwidth}
 
   \begin{itemize}
-  \item 图计算小组的成立，2019.04
+  \item 图计算小组的成立，2019.03
   \item 从无到有的图计算，2019.06
-  \item 单机图计算的增强，2019.11
+  \item 单机图计算的增强，2019.10
   \item 从单机走向分布式，2019.12
   \end{itemize}
   \end{columns}
@@ -112,13 +114,35 @@
   \column{0.52\textwidth}
 
   \begin{itemize}
-  \item 图计算小组的成立，2019.04
+  \item 图计算小组的成立，2019.03
   \item 从无到有的图计算，2019.06
-  \item 单机图计算的增强，2019.11
+  \item 单机图计算的增强，2019.10
   \item 从单机走向分布式，2019.12
   \end{itemize}
   \end{columns}
 
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{简要总结}
+    \begin{center}
+%      \begin{tabularx}{0.8\textwidth}{ | >{\raggedright\arraybackslash}X | >{\centering\arraybackslash}X | >{\raggedleft\arraybackslash}X | }
+% \hline
+% item 11 & item 12 & item 13 \\
+% \hline
+% item 21  & item 22  & item 23  \\
+%\hline
+%\end{tabularx}
+      \begin{tabularx}{0.8\textwidth} { | >{\raggedright\arraybackslash}X | >{\centering\arraybackslash}X | >{\centering\arraybackslash}X | }
+        \hline 条目 & 总数 & 个人参与 \\
+        \hline 专利文档 & 1 & 1 \\
+        \hline 著作权文档 & 2 & 2 \\
+        \hline 外出招聘 & 4 & 3 \\
+        \hline 出差 & 3 & 2 \\
+        \hline 技术分享 & 4 & 2 \\
+        \hline
+      \end{tabularx}
+    \end{center}
   \end{frame}
 
   \begin{frame}
@@ -130,7 +154,7 @@
         \includegraphics[scale=0.35]{../../photos/bar/smile.png}
         \begin{itemize}
           \item 严格把控计划进度
-          \item 规范的git提交记录
+          \item 组内规范git提交记录
           \item 设计模式和语言特性的大量使用
         \end{itemize}
       \column{0.5\textwidth}
@@ -138,7 +162,7 @@
         \begin{itemize}
           \item 缺少全局性的思考
           \item 数据结构使用不合理
-          \item 日志输出的重视程度不够
+          \item 日志输出的重视程度不够以及多线程安全意识
         \end{itemize}
     \end{columns}
   \end{frame}
